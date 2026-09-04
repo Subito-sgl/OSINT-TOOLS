@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSINT TOOLS</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#080b12;
+    color:#fff;
+}
+
+header{
+    padding:35px 20px;
+    text-align:center;
+    background:linear-gradient(135deg,#101827,#080b12);
+    border-bottom:1px solid #202938;
+}
+
+h1{
+    margin:0;
+    font-size:42px;
+    letter-spacing:3px;
+}
+
+header p{
+    color:#8d9aad;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:25px 15px;
+}
+
+.search{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid #273247;
+    background:#101722;
+    color:white;
+    font-size:16px;
+    outline:none;
+}
+
+.categories{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:20px 0;
+}
+
+button{
+    border:1px solid #29364b;
+    background:#111925;
+    color:#cbd5e1;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1b2636;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#0f1621;
+    border:1px solid #202c3d;
+    border-radius:14px;
+    padding:18px;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:#415674;
+}
+
+.card h3{
+    margin-top:0;
+}
+
+.card p{
+    color:#8d9aad;
+    font-size:14px;
+    min-height:40px;
+}
+
+.card a{
+    display:inline-block;
+    margin-top:10px;
+    padding:9px 13px;
+    border-radius:8px;
+    background:#182437;
+    color:#fff;
+    text-decoration:none;
+}
+
+.card a:hover{
+    background:#253752;
+}
+
+.tag{
+    display:inline-block;
+    font-size:11px;
+    padding:4px 7px;
+    border-radius:6px;
+    background:#192435;
+    color:#9fb1c9;
+}
+
+footer{
+    text-align:center;
+    padding:35px;
+    color:#687588;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>OSINT TOOLS</h1>
+<p>Public & legal open-source intelligence tools</p>
+</header>
+
+<div class="container">
+
+<input
+    id="search"
+    class="search"
+    type="text"
+    placeholder="🔎 Поиск инструмента..."
+>
+
+<div class="categories">
+<button onclick="filterTools('all')">Все</button>
+<button onclick="filterTools('phone')">📱 Телефон</button>
+<button onclick="filterTools('email')">📧 Email</button>
+<button onclick="filterTools('name')">👤 Имя</button>
+</div>
+
+<div id="tools" class="grid"></div>
+
+</div>
+
+<footer>
+OSINT TOOLS • Используй только законные и публичные источники
+</footer>
+
+<script>
+
+const tools = [
+
+/* PHONE */
+
+["Truecaller","phone","Поиск информации по номеру","https://www.truecaller.com/"],
+["NumVerify","phone","Проверка номера и оператора","https://numverify.com/"],
+["Veriphone","phone","Проверка телефонного номера","https://veriphone.io/"],
+["PhoneValidator","phone","Валидация телефонных номеров","https://www.phonevalidator.com/"],
+["IPQualityScore","phone","Проверка номера телефона","https://www.ipqualityscore.com/"],
+["Twilio Lookup","phone","Проверка данных номера","https://www.twilio.com/docs/lookup"],
+["Telnyx Lookup","phone","Информация о телефонном номере","https://telnyx.com/products/number-lookup"],
+["Abstract API Phone","phone","Phone validation API","https://www.abstractapi.com/phone-validation-api"],
+["NumLookup","phone","Reverse phone lookup","https://www.numlookup.com/"],
+["FreeCarrierLookup","phone","Определение оператора","https://freecarrierlookup.com/"],
+["CarrierLookup","phone","Carrier lookup","https://www.carrierlookup.com/"],
+["HLR Lookup","phone","HLR информация","https://www.hlrlookup.com/"],
+["ITU","phone","Национальные планы нумерации","https://www.itu.int/"],
+["Tellows","phone","Отзывы о номерах","https://www.tellows.com/"],
+["Should I Answer","phone","Отзывы о телефонных номерах","https://www.shouldianswer.com/"],
+["WhoCallsMe","phone","Отзывы о номерах","https://whocallsme.com/"],
+["800notes","phone","Поиск информации о звонках","https://800notes.com/"],
+["CallerSmart","phone","Reverse phone lookup","https://callersmart.com/"],
+["UnknownPhone","phone","Поиск неизвестных номеров","https://unknownphone.com/"],
+["WhoCalledMe","phone","Поиск телефонных номеров","https://whocalledmeuk.co.uk/"],
+["Sync.ME","phone","Идентификация номера","https://sync.me/"],
+["CallApp","phone","Caller ID","https://www.callapp.com/"],
+["Eyecon","phone","Caller identification","https://www.eyecon-app.com/"],
+["NumBuster","phone","Информация о номерах","https://numbuster.com/"],
+["Whoscall","phone","Caller ID","https://whoscall.com/"],
+["Epieos","phone","OSINT поиск","https://epieos.com/"],
+["PhoneDB","phone","Поиск номера","https://phonedb.net/"],
+["ReversePhone","phone","Reverse phone search","https://www.reversephone.com/"],
+["Whitepages","phone","People & phone search","https://www.whitepages.com/"],
+["AnyWho","phone","Поиск людей и номеров","https://www.anywho.com/"],
+["411","phone","Directory search","https://411.com/"],
+["Canada411","phone","Канадский справочник","https://www.canada411.ca/"],
+["ZabaSearch","phone","People search","https://www.zabasearch.com/"],
+["Google","phone","Поиск номера в Google","https://www.google.com/"],
+["Bing","phone","Поиск номера Bing","https://www.bing.com/"],
+["Yandex","phone","Поиск номера Yandex","https://yandex.com/"],
+["DuckDuckGo","phone","Поиск номера","https://duckduckgo.com/"],
+["Brave Search","phone","Поиск информации","https://search.brave.com/"],
+["Startpage","phone","Приватный поиск","https://www.startpage.com/"],
+["Mojeek","phone","Search engine","https://www.mojeek.com/"],
+["Yahoo Search","phone","Поиск информации","https://search.yahoo.com/"],
+["GitHub Search","phone","Поиск публичных данных GitHub","https://github.com/search"],
+["Reddit Search","phone","Поиск Reddit","https://www.reddit.com/search/"],
+["LinkedIn","phone","Поиск профилей","https://www.linkedin.com/"],
+["Facebook","phone","Поиск публичных профилей","https://www.facebook.com/"],
+["Telegram Search","phone","Поиск публичных Telegram страниц","https://www.google.com/search?q=site%3At.me"],
+["OSINT Industries","phone","OSINT поиск","https://osint.industries/"],
+["Max Intel","phone","OSINT инструменты","https://maxintel.io/"],
+["Predicta Search","phone","People search","https://www.predictasearch.com/"],
+["EspectroSINT","phone","OSINT инструменты","https://espectrosint.com/"],
+
+/* EMAIL */
+
+["Epieos Email","email","Проверка email","https://epieos.com/"],
+["Hunter","email","Поиск и проверка email","https://hunter.io/"],
+["Have I Been Pwned","email","Проверка утечек email","https://haveibeenpwned.com/"],
+["EmailRep","email","Репутация email","https://emailrep.io/"],
+["Gravatar","email","Поиск публичного профиля","https://gravatar.com/"],
+["Email Checker","email","Проверка email","https://email-checker.net/"],
+["VerifyEmail","email","Email verification","https://verify-email.org/"],
+["Email Hippo","email","Email validation","https://www.emailhippo.com/"],
+["MailTester","email","Проверка email","https://mailtester.com/"],
+["Abstract Email API","email","Email validation","https://www.abstractapi.com/email-verification-validation-api"],
+["Hunter Email Finder","email","Поиск рабочих email","https://hunter.io/email-finder"],
+["Snov.io","email","Email finder","https://snov.io/"],
+["VoilaNorbert","email","Email finder","https://www.voilanorbert.com/"],
+["Clearbit","email","Информация о компаниях","https://clearbit.com/"],
+["Apollo","email","Поиск профессиональных контактов","https://www.apollo.io/"],
+["RocketReach","email","Поиск контактов","https://rocketreach.co/"],
+["SignalHire","email","Поиск профессиональных контактов","https://www.signalhire.com/"],
+["People Data Labs","email","People data platform","https://www.peopledatalabs.com/"],
+["DeHashed","email","Поиск утечек","https://dehashed.com/"],
+["LeakCheck","email","Проверка утечек","https://leakcheck.io/"],
+["Intelligence X","email","Поиск публичных данных","https://intelx.io/"],
+["Google","email","Поиск email","https://www.google.com/"],
+["Bing","email","Поиск email","https://www.bing.com/"],
+["Yandex","email","Поиск email","https://yandex.com/"],
+["DuckDuckGo","email","Поиск email","https://duckduckgo.com/"],
+["Brave Search","email","Поиск email","https://search.brave.com/"],
+["Startpage","email","Приватный поиск","https://www.startpage.com/"],
+["Mojeek","email","Search engine","https://www.mojeek.com/"],
+["Yahoo","email","Поиск email","https://search.yahoo.com/"],
+["GitHub","email","Поиск публичных аккаунтов","https://github.com/search"],
+["GitLab","email","Поиск публичных профилей","https://gitlab.com/explore"],
+["Reddit","email","Поиск Reddit","https://www.reddit.com/search/"],
+["LinkedIn","email","Поиск профессиональных профилей","https://www.linkedin.com/"],
+["Facebook","email","Поиск публичных профилей","https://www.facebook.com/"],
+["X Search","email","Поиск публичных постов","https://x.com/search"],
+["Gravatar Search","email","Поиск аватаров","https://gravatar.com/"],
+["BreachDirectory","email","Проверка утечек","https://breachdirectory.org/"],
+["Leak-Lookup","email","Проверка утечек","https://leak-lookup.com/"],
+["Snusbase","email","Database search","https://snusbase.com/"],
+["Whoxy","email","WHOIS данные","https://www.whoxy.com/"],
+["WhoisXML API","email","WHOIS поиск","https://www.whoisxmlapi.com/"],
+["SecurityTrails","email","DNS и доменные данные","https://securitytrails.com/"],
+["ViewDNS","email","DNS инструменты","https://viewdns.info/"],
+["DNSDumpster","email","DNS reconnaissance","https://dnsdumpster.com/"],
+["Who.is","email","WHOIS lookup","https://who.is/"],
+["ICANN Lookup","email","WHOIS lookup","https://lookup.icann.org/"],
+["URLScan","email","Поиск URL и доменов","https://urlscan.io/"],
+["VirusTotal","email","Анализ доменов и файлов","https://www.virustotal.com/"],
+
+/* NAME */
+
+["Google People Search","name","Поиск людей через Google","https://www.google.com/"],
+["Bing People Search","name","Поиск людей","https://www.bing.com/"],
+["Yandex People Search","name","Поиск людей","https://yandex.com/"],
+["DuckDuckGo","name","Поиск людей","https://duckduckgo.com/"],
+["Brave Search","name","Поиск людей","https://search.brave.com/"],
+["Startpage","name","Приватный поиск","https://www.startpage.com/"],
+["Mojeek","name","Поиск людей","https://www.mojeek.com/"],
+["LinkedIn","name","Профессиональные профили","https://www.linkedin.com/"],
+["Facebook","name","Публичные профили","https://www.facebook.com/"],
+["Instagram","name","Публичные профили","https://www.instagram.com/"],
+["X","name","Поиск пользователей","https://x.com/"],
+["Reddit","name","Поиск пользователей","https://www.reddit.com/search/"],
+["GitHub","name","Поиск пользователей","https://github.com/search"],
+["GitLab","name","Поиск пользователей","https://gitlab.com/explore"],
+["Telegram","name","Поиск публичных страниц","https://www.google.com/search?q=site%3At.me"],
+["TikTok","name","Поиск публичных профилей","https://www.tiktok.com/search"],
+["YouTube","name","Поиск каналов","https://www.youtube.com/results"],
+["Pinterest","name","Поиск профилей","https://www.pinterest.com/search/"],
+["Twitch","name","Поиск каналов","https://www.twitch.tv/search"],
+["Discord","name","Публичный поиск","https://discord.com/"],
+["TruePeopleSearch","name","People search","https://www.truepeoplesearch.com/"],
+["FastPeopleSearch","name","People search","https://www.fastpeoplesearch.com/"],
+["That’s Them","name","People search","https://thatsthem.com/"],
+["Whitepages","name","People search","https://www.whitepages.com/"],
+["AnyWho","name","People search","https://www.anywho.com/"],
+["ZabaSearch","name","People search","https://www.zabasearch.com/"],
+["411","name","Directory search","https://411.com/"],
+["PeopleFinders","name","People search","https://www.peoplefinders.com/"],
+["Spokeo","name","People search","https://www.spokeo.com/"],
+["BeenVerified","name","People search","https://www.beenverified.com/"],
+["Intelius","name","People search","https://www.intelius.com/"],
+["TruthFinder","name","People search","https://www.truthfinder.com/"],
+["US Search","name","People search","https://www.ussearch.com/"],
+["PeopleLooker","name","People search","https://www.peoplelooker.com/"],
+["Instant Checkmate","name","People search","https://www.instantcheckmate.com/"],
+["PeekYou","name","People search","https://www.peekyou.com/"],
+["WebMii","name","Web presence search","https://webmii.com/"],
+["Social Searcher","name","Поиск социальных сетей","https://www.social-searcher.com/"],
+["IDCrawl","name","Social people search","https://www.idcrawl.com/"],
+["UserSearch","name","Username search","https://usersearch.org/"],
+["WhatsMyName","name","Поиск username","https://whatsmyname.app/"],
+["Namechk","name","Проверка username","https://namechk.com/"],
+["Namecheckup","name","Username checker","https://namecheckup.com/"],
+["Sherlock","name","Username search","https://github.com/sherlock-project/sherlock"],
+["Maigret","name","Username search","https://github.com/soxoj/maigret"],
+["Blackbird","name","Username OSINT","https://github.com/p1ngul1n0/blackbird"],
+["WhatsMyName Project","name","Username OSINT","https://github.com/WebBreacher/WhatsMyName"],
+["OSINT Industries","name","OSINT search","https://osint.industries/"],
+["Epieos","name","OSINT search","https://epieos.com/"],
+["IntelX","name","OSINT search","https://intelx.io/"]
+
+];
+
+let current="all";
+
+function render(){
+
+    const query=document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    const box=document.getElementById("tools");
+
+    box.innerHTML="";
+
+    tools
+    .filter(t => current==="all" || t[1]===current)
+    .filter(t => 
+        t[0].toLowerCase().includes(query) ||
+        t[2].toLowerCase().includes(query)
+    )
+    .forEach(t => {
+
+        const card=document.createElement("div");
+
+        card.className="card";
+
+        card.innerHTML=`
+            <span class="tag">${t[1].toUpperCase()}</span>
+            <h3>${t[0]}</h3>
+            <p>${t[2]}</p>
+            <a href="${t[3]}" target="_blank" rel="noopener">
+                Открыть →
+            </a>
+        `;
+
+        box.appendChild(card);
+    });
+}
+
+function filterTools(category){
+    current=category;
+    render();
+}
+
+document
+.getElementById("search")
+.addEventListener("input",render);
+
+render();
+
+</script>
+
+</body>
+</html>
+
+
